@@ -158,6 +158,8 @@ else()
   list(APPEND CIPHERS_SOURCES_C
     crypto/cipher/aes.c
     crypto/cipher/aes_icm.c
+    crypto/cipher/gost.c
+    crypto/cipher/gost_icm.c
   )
 endif()
 
@@ -206,6 +208,9 @@ set(REPLAY_SOURCES_C
 set(SOURCES_H
   crypto/include/aes.h
   crypto/include/aes_icm.h
+  crypto/include/gost.h
+  crypto/include/gost_icm.h
+  crypto/include/gost89.h
   crypto/include/alloc.h
   crypto/include/auth.h
   crypto/include/cipher.h

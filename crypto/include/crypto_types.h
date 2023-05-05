@@ -98,6 +98,12 @@
 #define SRTP_AES_GCM_256 7
 
 /*
+ * GOST-28147-89
+ * */
+
+#define SRTP_GOST_28147_89 8
+
+/*
  * The null authentication function performs no authentication.
  *
  * The NULL_AUTH function does nothing, and can be selected to indicate

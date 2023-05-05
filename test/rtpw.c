@@ -398,8 +398,10 @@ int main(int argc, char *argv[])
                     srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
                     break;
                 case 256:
-                    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_80(&policy.rtp);
-                    srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
+                    srtp_crypto_policy_set_gost_28147_89(&policy.rtp);
+                    srtp_crypto_policy_set_rtcp_gost_28147_89(&policy.rtcp);
+//                    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_80(&policy.rtp);
+//                    srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
                     break;
                 }
             }
@@ -416,8 +418,10 @@ int main(int argc, char *argv[])
                     srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
                     break;
                 case 256:
-                    srtp_crypto_policy_set_aes_cm_256_null_auth(&policy.rtp);
-                    srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
+                    srtp_crypto_policy_set_gost_28147_89(&policy.rtp);
+                    srtp_crypto_policy_set_rtcp_gost_28147_89(&policy.rtcp);
+//                    srtp_crypto_policy_set_aes_cm_256_null_auth(&policy.rtp);
+//                    srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
                     break;
                 }
             }
@@ -510,8 +514,10 @@ int main(int argc, char *argv[])
          * the effect of this policy is to turn off SRTP, so that this
          * application is now a vanilla-flavored RTP application.
          */
-        srtp_crypto_policy_set_null_cipher_hmac_null(&policy.rtp);
-        srtp_crypto_policy_set_null_cipher_hmac_null(&policy.rtcp);
+        srtp_crypto_policy_set_gost_28147_89(&policy.rtp);
+        srtp_crypto_policy_set_rtcp_gost_28147_89(&policy.rtcp);
+//        srtp_crypto_policy_set_null_cipher_hmac_null(&policy.rtp);
+//        srtp_crypto_policy_set_null_cipher_hmac_null(&policy.rtcp);
         policy.key = (uint8_t *)key;
         policy.ssrc.type = ssrc_specific;
         policy.ssrc.value = ssrc;

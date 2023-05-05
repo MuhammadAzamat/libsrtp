@@ -126,6 +126,12 @@ srtp_err_status_t srtp_crypto_kernel_init(void)
     if (status) {
         return status;
     }
+    status = srtp_crypto_kernel_load_cipher_type(&srtp_gost_icm_28147,SRTP_GOST_28147_89);
+    if (status) {
+        return status;
+    }
+
+
 #ifdef GCM
     status = srtp_crypto_kernel_load_cipher_type(&srtp_aes_icm_192,
                                                  SRTP_AES_ICM_192);

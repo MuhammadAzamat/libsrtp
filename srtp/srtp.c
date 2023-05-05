@@ -3539,6 +3539,34 @@ void srtp_crypto_policy_set_aes_gcm_256_16_auth(srtp_crypto_policy_t *p)
 }
 
 /*
+ * GOST-28147-89
+ * */
+
+void srtp_crypto_policy_set_gost_28147_89(srtp_crypto_policy_t *p)
+{
+    p->cipher_type = SRTP_GOST_28147_89;
+    p->cipher_key_len = SRTP_GOST_256_KEY_LEN;
+    p->auth_type = SRTP_NULL_AUTH; // No authentication specified in RFC 7830 for GOST-28147-89
+    p->auth_key_len = 0; // No authentication specified in RFC 7830 for GOST-28147-89
+    p->auth_tag_len = 0; // No authentication specified in RFC 7830 for GOST-28147-89
+    p->sec_serv = sec_serv_conf; // No authentication specified in RFC 7830 for GOST-28147-89
+}
+
+/*
+ * GOST-28147-89
+ * */
+void srtp_crypto_policy_set_rtcp_gost_28147_89(srtp_crypto_policy_t *p)
+{
+    p->cipher_type = SRTP_GOST_28147_89;
+    p->cipher_key_len = SRTP_GOST_256_KEY_LEN;
+    p->auth_type = SRTP_NULL_AUTH; // No authentication specified in RFC 7830 for GOST-28147-89
+    p->auth_key_len = 0; // No authentication specified in RFC 7830 for GOST-28147-89
+    p->auth_tag_len = 0; // No authentication specified in RFC 7830 for GOST-28147-89
+    p->sec_serv = sec_serv_conf; // No authentication specified in RFC 7830 for GOST-28147-89
+}
+
+
+/*
  * secure rtcp functions
  */
 

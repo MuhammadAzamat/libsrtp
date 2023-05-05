@@ -112,10 +112,12 @@ extern "C" {
 #define SRTP_AES_128_KEY_LEN 16
 #define SRTP_AES_192_KEY_LEN 24
 #define SRTP_AES_256_KEY_LEN 32
+#define SRTP_GOST_256_KEY_LEN 32
 
 #define SRTP_AES_ICM_128_KEY_LEN_WSALT (SRTP_SALT_LEN + SRTP_AES_128_KEY_LEN)
 #define SRTP_AES_ICM_192_KEY_LEN_WSALT (SRTP_SALT_LEN + SRTP_AES_192_KEY_LEN)
 #define SRTP_AES_ICM_256_KEY_LEN_WSALT (SRTP_SALT_LEN + SRTP_AES_256_KEY_LEN)
+#define SRTP_GOST_ICM_256_KEY_LEN_WSALT (SRTP_SALT_LEN + SRTP_GOST_256_KEY_LEN)
 
 #define SRTP_AES_GCM_128_KEY_LEN_WSALT                                         \
     (SRTP_AEAD_SALT_LEN + SRTP_AES_128_KEY_LEN)
@@ -1136,6 +1138,17 @@ void srtp_crypto_policy_set_aes_gcm_128_16_auth(srtp_crypto_policy_t *p);
  *
  */
 void srtp_crypto_policy_set_aes_gcm_256_16_auth(srtp_crypto_policy_t *p);
+
+/**
+ * GOST-28147-89
+ */
+
+void srtp_crypto_policy_set_gost_28147_89(srtp_crypto_policy_t *p);
+
+/**
+ * GOST-28147-89
+ */
+void srtp_crypto_policy_set_rtcp_gost_28147_89(srtp_crypto_policy_t *p);
 
 /**
  * @brief srtp_dealloc() deallocates storage for an SRTP session
