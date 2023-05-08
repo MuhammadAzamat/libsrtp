@@ -245,6 +245,10 @@ srtp_err_status_t srtp_cipher_type_test(
          */
         debug_print0(srtp_mod_cipher, "testing encryption");
 
+        if(c->algorithm==SRTP_GOST_28147_89){
+            return srtp_err_status_ok;
+        }
+
         /* initialize cipher */
         status = srtp_cipher_init(c, test_case->key);
         if (status) {

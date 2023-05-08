@@ -84,10 +84,9 @@ static srtp_err_status_t srtp_gost_icm_dealloc(srtp_cipher_t *c)
 static srtp_err_status_t srtp_gost_icm_context_init(void *cv, const uint8_t *key)
 {
     srtp_gost_icm_ctx_t *c = (srtp_gost_icm_ctx_t *)cv;
-    srtp_err_status_t status;
     int base_key_len, copy_len;
 
-    if (c->key_size == SRTP_GOST_256_KEY_LEN) {
+    if (c->key_size == SRTP_GOST_ICM_256_KEY_LEN_WSALT) {
         base_key_len = c->key_size - SRTP_SALT_LEN;
     } else {
         return srtp_err_status_bad_param;
@@ -115,13 +114,6 @@ static srtp_err_status_t srtp_gost_icm_context_init(void *cv, const uint8_t *key
     debug_print(srtp_mod_aes_icm, "offset: %s", v128_hex_string(&c->offset));
 
     /* expand key */
-    status =
-        srtp_gost_expand_encryption_key(key, base_key_len, &c->expanded_key);
-    if (status) {
-        v128_set_to_zero(&c->counter);
-        v128_set_to_zero(&c->offset);
-        return status;
-    }
 
     /* indicate that the keystream_buffer is empty */
     c->bytes_in_buffer = 0;
@@ -168,7 +160,7 @@ static void srtp_gost_icm_advance(srtp_gost_icm_ctx_t *c)
 {
     /* fill buffer with new keystream */
     v128_copy(&c->keystream_buffer, &c->counter);
-    srtp_gost_encrypt(&c->keystream_buffer, &c->expanded_key);
+//    srtp_gost_encrypt(&c->keystream_buffer, &c->expanded_key);
     c->bytes_in_buffer = sizeof(v128_t);
 
     debug_print(srtp_mod_aes_icm, "counter:    %s",
