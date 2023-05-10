@@ -398,10 +398,10 @@ int main(int argc, char *argv[])
                     srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
                     break;
                 case 256:
-//                    srtp_crypto_policy_set_gost_28147_89(&policy.rtp);
-//                    srtp_crypto_policy_set_rtcp_gost_28147_89(&policy.rtcp);
-                    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_80(&policy.rtp);
-                    srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
+                    srtp_crypto_policy_set_gost_28147_89(&policy.rtp);
+                    srtp_crypto_policy_set_rtcp_gost_28147_89(&policy.rtcp);
+//                    srtp_crypto_policy_set_aes_cm_256_hmac_sha1_80(&policy.rtp);
+//                    srtp_crypto_policy_set_rtcp_default(&policy.rtcp);
                     break;
                 }
             }
