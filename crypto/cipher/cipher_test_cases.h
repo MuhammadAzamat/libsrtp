@@ -46,6 +46,7 @@
 extern const srtp_cipher_test_case_t srtp_aes_icm_128_test_case_0;
 extern const srtp_cipher_test_case_t srtp_aes_icm_192_test_case_0;
 extern const srtp_cipher_test_case_t srtp_aes_icm_256_test_case_0;
+extern const srtp_cipher_test_case_t srtp_gost_test_case_0;
 
 extern const srtp_cipher_test_case_t srtp_aes_gcm_128_test_case_0;
 extern const srtp_cipher_test_case_t srtp_aes_gcm_256_test_case_0;

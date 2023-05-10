@@ -83,8 +83,8 @@ static srtp_err_status_t srtp_gost_icm_dealloc(srtp_cipher_t *c)
 static srtp_err_status_t srtp_gost_icm_context_init(void *cv, const uint8_t *key)
 {
     gost_ctx *c = (gost_ctx *)cv;
-
-    c->k;
+    printf("%s", (const char *)c);
+    printf("%s", key);
 
 
     return srtp_err_status_ok;
@@ -100,6 +100,10 @@ static srtp_err_status_t srtp_gost_icm_set_iv(void *cv,
                                              srtp_cipher_direction_t direction)
 {
     gost_ctx *c = (gost_ctx *)cv;
+    printf("%s", (const char *)c);
+    printf("%s", iv);
+    printf("%u", direction);
+
     return srtp_err_status_ok;
 }
 
@@ -109,12 +113,13 @@ static srtp_err_status_t srtp_gost_icm_set_iv(void *cv,
  *
  * this is an internal, hopefully inlined function
  */
-static void srtp_gost_icm_advance(srtp_gost_icm_ctx_t *c)
-{
-
-//    srtp_gost_encrypt(&c->keystream_buffer, &c->expanded_key);
-
-}
+//static void srtp_gost_icm_advance(srtp_gost_icm_ctx_t *c)
+//{
+//    printf("%s", (const char *)c);
+//
+////    srtp_gost_encrypt(&c->keystream_buffer, &c->expanded_key);
+//
+//}
 
 /*
  * icm_encrypt deals with the following cases:
@@ -133,10 +138,22 @@ static srtp_err_status_t srtp_gost_icm_encrypt(void *cv,
                                               unsigned char *buf,
                                               unsigned int *enc_len)
 {
-    srtp_gost_icm_ctx_t *c = (srtp_gost_icm_ctx_t *)cv;
+    gost_ctx *c = (gost_ctx *)cv;
     unsigned int bytes_to_encr = *enc_len;
-    unsigned int i;
-    uint32_t *b;
+    printf("@@@@@@@@%s", (const char *)c);
+    printf("@@@@@@@@%s", (const char *)buf);
+    printf("@@@@@@@@%u", bytes_to_encr);
+
+    gost_init(c, NULL);
+    gost_key(c, buf);
+
+    // Encrypt
+//    gost_enc(c, buf, buf, *enc_len);
+
+
+    gost_destroy(c);
+
+//    gost_enc(c, buf, (byte *)enc_len,bytes_to_encr);
 
     /* check that there's enough segment left*/
 
@@ -187,6 +204,6 @@ const srtp_cipher_type_t srtp_gost_icm_28147 = {
     srtp_gost_icm_set_iv,           /* */
     0,                             /* get_tag */
     srtp_gost_icm_256_description,  /* */
-    &srtp_aes_icm_256_test_case_0, /* */
+    &srtp_gost_test_case_0, /* */
     SRTP_GOST_28147_89               /* */
 };

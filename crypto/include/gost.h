@@ -32,6 +32,23 @@ typedef struct {
     u4 k87[256],k65[256],k43[256],k21[256];
 } gost_ctx;
 
+/* Encrypts several blocks in ECB mode */
+void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks);
+
+void gost_key(gost_ctx *c, const byte *k);
+/* Initalize context. Provides default value for subst_block */
+void gost_init(gost_ctx *c, const gost_subst_block *b);
+/* Cleans up key from context */
+void gost_destroy(gost_ctx *c);
+
+extern gost_subst_block GostR3411_94_TestParamSet;
+extern gost_subst_block GostR3411_94_CryptoProParamSet;
+extern gost_subst_block Gost28147_TestParamSet;
+extern gost_subst_block Gost28147_CryptoProParamSetA;
+extern gost_subst_block Gost28147_CryptoProParamSetB;
+extern gost_subst_block Gost28147_CryptoProParamSetC;
+extern gost_subst_block Gost28147_CryptoProParamSetD;
+extern const byte CryptoProKeyMeshingKey[];
 
 #if __LONG_MAX__ > 2147483647L
 typedef unsigned int word32;
@@ -42,5 +59,7 @@ typedef unsigned long word32;
 #ifdef __cplusplus
 }
 #endif
+
+
 
 #endif /* GOST_H */

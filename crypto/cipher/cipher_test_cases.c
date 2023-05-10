@@ -363,3 +363,33 @@ const srtp_cipher_test_case_t srtp_aes_gcm_256_test_case_0 = {
     16,                                      /* */
     &srtp_aes_gcm_256_test_case_0a           /* pointer to next testcase */
 };
+
+static uint8_t srtp_gost_plaintext[8] = {
+0x01, 0x23, 0x45, 0x067, 0x89, 0xab, 0xcd, 0xef
+};
+
+static uint8_t srtp_gost_key[32] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+static const uint8_t srtp_gost_ciphertext[16] = {
+    0x7f, 0x67, 0x9d, 0x90, 0xbe, 0xbc, 0x24, 0x30,
+    0x5a, 0x46, 0x8d, 0x42, 0xb9, 0xd4, 0xed, 0xcd
+};
+
+const srtp_cipher_test_case_t srtp_gost_test_case_0 = {
+    SRTP_GOST_256_KEY_LEN,          /* octets in key            */
+    srtp_gost_key,        /* key                      */
+    NULL,         /* packet index             */
+    8,                                      /* octets in plaintext      */
+    srtp_gost_plaintext,  /* plaintext                */
+    16,                                      /* octets in ciphertext     */
+    srtp_gost_ciphertext, /* ciphertext  + tag        */
+    0,                                      /* octets in AAD            */
+    NULL,        /* AAD                      */
+    0,                                      /* */
+    NULL           /* pointer to next testcase */
+};
