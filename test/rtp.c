@@ -75,6 +75,8 @@ int rtp_sendto(rtp_sender_t sender, const void *msg, int len)
 
     /* apply srtp */
     stat = srtp_protect(sender->srtp_ctx, &sender->message.header, &pkt_len);
+    printf("word: %s", sender->message.body);
+
     if (stat) {
 #if PRINT_DEBUG
         fprintf(stderr, "error: srtp protection failed with code %d\n", stat);
@@ -87,6 +89,7 @@ int rtp_sendto(rtp_sender_t sender, const void *msg, int len)
     octets_sent =
         sendto(sender->socket, (void *)&sender->message, pkt_len, 0,
                (struct sockaddr *)&sender->addr, sizeof(struct sockaddr_in));
+
 
     if (octets_sent != pkt_len) {
 #if PRINT_DEBUG

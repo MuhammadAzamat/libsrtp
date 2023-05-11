@@ -377,6 +377,11 @@ if(LIBSRTP_TEST_APPS)
                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     endif()
   endif()
+  if(BASH_PROGRAM AND NOT WIN32)
+    add_executable(gost test/gosttest.c )
+    target_link_libraries(gost srtp2)
+    add_test(gost gost)
+  endif()
 endif()
 
 # Export targets

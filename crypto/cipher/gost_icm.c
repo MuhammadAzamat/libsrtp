@@ -83,8 +83,10 @@ static srtp_err_status_t srtp_gost_icm_dealloc(srtp_cipher_t *c)
 static srtp_err_status_t srtp_gost_icm_context_init(void *cv, const uint8_t *key)
 {
     gost_ctx *c = (gost_ctx *)cv;
-    printf("%s", (const char *)c);
-    printf("%s", key);
+    (void) c;
+    (void) key;
+//    printf("%s", (const char *)c);
+//    printf("%s", key);
 
 
     return srtp_err_status_ok;
@@ -100,9 +102,12 @@ static srtp_err_status_t srtp_gost_icm_set_iv(void *cv,
                                              srtp_cipher_direction_t direction)
 {
     gost_ctx *c = (gost_ctx *)cv;
-    printf("%s", (const char *)c);
-    printf("%s", iv);
-    printf("%u", direction);
+    (void) c;
+    (void) iv;
+    (void) direction;
+//    printf("%s", (const char *)c);
+//    printf("%s", iv);
+//    printf("%u", direction);
 
     return srtp_err_status_ok;
 }
@@ -140,49 +145,21 @@ static srtp_err_status_t srtp_gost_icm_encrypt(void *cv,
 {
     gost_ctx *c = (gost_ctx *)cv;
     unsigned int bytes_to_encr = *enc_len;
-    printf("@@@@@@@@%s", (const char *)c);
-    printf("@@@@@@@@%s", (const char *)buf);
-    printf("@@@@@@@@%u", bytes_to_encr);
+    (void) c;
+    (void) buf;
+    (void) bytes_to_encr;
+//    printf("@@@@@@@@%s", (const char *)c);
+//    printf("@@@@@@@@%s", (const char *)buf);
+//    printf("@@@@@@@@%u", bytes_to_encr);
 
-    gost_init(c, NULL);
-    gost_key(c, buf);
-
-    // Encrypt
+//    gost_init(c, NULL);
+//    gost_key(c, buf);
+//
+//    // Encrypt
 //    gost_enc(c, buf, buf, *enc_len);
-
-
-    gost_destroy(c);
-
-//    gost_enc(c, buf, (byte *)enc_len,bytes_to_encr);
-
-    /* check that there's enough segment left*/
-
-        /* encrypt bytes until the remaining data is 16-byte aligned */
-
-
-    /* now loop over entire 16-byte blocks of keystream */
-
-        /* fill buffer with new keystream */
-//        srtp_gost_icm_advance(c);
-
-        /*
-         * add keystream into the data buffer (this would be a lot faster
-         * if we could assume 32-bit alignment!)
-         */
-
-#if ALIGN_32
-        b = (uint32_t *)buf;
-        *b++ ^= c->keystream_buffer.v32[0];
-        *b++ ^= c->keystream_buffer.v32[1];
-        *b++ ^= c->keystream_buffer.v32[2];
-        *b++ ^= c->keystream_buffer.v32[3];
-        buf = (uint8_t *)b;
-#else
-
-#endif /* #if ALIGN_32 */
-
-    /* if there is a tail end of the data, process it */
-
+//
+//
+//    gost_destroy(c);
 
     return srtp_err_status_ok;
 }
