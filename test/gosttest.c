@@ -76,6 +76,12 @@ void gost_icm_encrypt(byte *key, byte *iv, byte *in, byte *out, size_t len) {
 }
 
 int main(void) {
+
+    /*
+     * static String input1 = "0000000000000000";
+     * static String output1 = "1b0bbc32cebcab42";
+     * 546d203368656c326973652073736e62206167796967747473656865202c3d73
+     * */
     byte key[] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef};
     byte iv[] = {0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10};
     byte plaintext[] = "Hello, world!";
