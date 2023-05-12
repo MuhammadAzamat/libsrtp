@@ -68,7 +68,7 @@ int gost_mac(gost_ctx *ctx,int hmac_len,const unsigned char *data,
 int gost_mac_iv(gost_ctx *ctx,int hmac_len,const unsigned char *iv,const unsigned char *data,
                unsigned int data_len,unsigned char *hmac) ;
 /* Perform one step of MAC calculation like gostcrypt */
-void mac_block(gost_ctx *c,byte *buffer,const  byte *block); 
+void mac_block(gost_ctx *c,byte *buffer,const  byte *block);
 /* Extracts MAC value from mac state buffer */
 void get_mac(byte *buffer,int nbits,byte *out);
 /* Implements cryptopro key meshing algorithm. Expect IV to be 8-byte size*/
@@ -81,10 +81,10 @@ extern gost_subst_block Gost28147_CryptoProParamSetA;
 extern gost_subst_block Gost28147_CryptoProParamSetB;
 extern gost_subst_block Gost28147_CryptoProParamSetC;
 extern gost_subst_block Gost28147_CryptoProParamSetD;
-extern const byte CryptoProKeyMeshingKey[]; 
-#if __LONG_MAX__ > 2147483647L 
-typedef unsigned int word32; 
-#else 
-typedef unsigned long word32; 
-#endif 
+extern const byte CryptoProKeyMeshingKey[];
+#if __LONG_MAX__ > 2147483647L
+typedef unsigned int word32;
+#else
+typedef unsigned long word32;
+#endif
 #endif

@@ -34,6 +34,8 @@ typedef struct {
 
 /* Encrypts several blocks in ECB mode */
 void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks);
+/* Decrypts several blocks in ECB mode */
+void gost_dec(gost_ctx *c, const byte *cipher,byte *clear, int blocks);
 
 void gost_key(gost_ctx *c, const byte *k);
 /* Initalize context. Provides default value for subst_block */
@@ -48,6 +50,7 @@ extern gost_subst_block Gost28147_CryptoProParamSetA;
 extern gost_subst_block Gost28147_CryptoProParamSetB;
 extern gost_subst_block Gost28147_CryptoProParamSetC;
 extern gost_subst_block Gost28147_CryptoProParamSetD;
+extern gost_subst_block Sbox_Default;
 extern const byte CryptoProKeyMeshingKey[];
 
 #if __LONG_MAX__ > 2147483647L

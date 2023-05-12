@@ -133,6 +133,17 @@ const byte CryptoProKeyMeshingKey[]={
     0xC0, 0x86, 0xDC, 0xC2,   0xEF, 0x4C, 0xA9, 0x2B
 };
 
+gost_subst_block Sbox_Default = {
+    {0x4,0xA,0x9,0x2,0xD,0x8,0x0,0xE,0x6,0xB,0x1,0xC,0x7,0xF,0x5,0x3},
+    {0xE,0xB,0x4,0xC,0x6,0xD,0xF,0xA,0x2,0x3,0x8,0x1,0x0,0x7,0x5,0x9},
+    {0x5,0x8,0x1,0xD,0xA,0x3,0x4,0x2,0xE,0xF,0xC,0x7,0x6,0x0,0x9,0xB},
+    {0x7,0xD,0xA,0x1,0x0,0x8,0x9,0xF,0xE,0x4,0x6,0xC,0xB,0x2,0x5,0x3},
+    {0x6,0xC,0x7,0x1,0x5,0xF,0xD,0x8,0x4,0xA,0x9,0xE,0x0,0x3,0xB,0x2},
+    {0x4,0xB,0xA,0x0,0x7,0x2,0x1,0xD,0x3,0x6,0x8,0x5,0x9,0xC,0xF,0xE},
+    {0xD,0xB,0x4,0x1,0x3,0xF,0x5,0x9,0x0,0xA,0xE,0x7,0x6,0x8,0x2,0xC},
+    {0x1,0xF,0xD,0x0,0x5,0x7,0xA,0x4,0x9,0x2,0x3,0xE,0x6,0xB,0x8,0xC}
+};
+
 /* Initialization of gost_ctx subst blocks*/
 static void kboxinit(gost_ctx *c, const gost_subst_block *b)
 {
@@ -140,10 +151,10 @@ static void kboxinit(gost_ctx *c, const gost_subst_block *b)
 
     for (i = 0; i < 256; i++)
     {
-        c->k87[i] = (b->k8[i>>4] <<4 | b->k7 [i &15])<<24;
-        c->k65[i] = (b->k6[i>>4] << 4 | b->k5 [i &15])<<16;
-        c->k43[i] = (b->k4[i>>4] <<4  | b->k3 [i &15])<<8;
-        c->k21[i] = b->k2[i>>4] <<4  | b->k1 [i &15];
+        c->k87[i] = (b->k1[i>>4] <<4 | b->k2 [i &15])<<24;
+        c->k65[i] = (b->k3[i>>4] << 4 | b->k4 [i &15])<<16;
+        c->k43[i] = (b->k5[i>>4] <<4  | b->k6 [i &15])<<8;
+        c->k21[i] = b->k7[i>>4] <<4  | b->k8 [i &15];
     }
 }
 
@@ -189,6 +200,38 @@ void gostcrypt(gost_ctx *c, const byte *in, byte *out)
     out[6] = (byte)((n1>>16)&0xff); out[7] = (byte)(n1>>24);
 }
 
+/* Low-level decryption routine. Decrypts one 64-bit block */
+void gostdecrypt(gost_ctx *c, const byte *in,byte *out)
+{
+    register word32 n1, n2; /* As named in the GOST */
+    n1 = in[0]|(in[1]<<8)|(in[2]<<16)|(in[3]<<24);
+    n2 = in[4]|(in[5]<<8)|(in[6]<<16)|(in[7]<<24);
+
+    n2 ^= f(c,n1+c->k[0]); n1 ^= f(c,n2+c->k[1]);
+    n2 ^= f(c,n1+c->k[2]); n1 ^= f(c,n2+c->k[3]);
+    n2 ^= f(c,n1+c->k[4]); n1 ^= f(c,n2+c->k[5]);
+    n2 ^= f(c,n1+c->k[6]); n1 ^= f(c,n2+c->k[7]);
+
+    n2 ^= f(c,n1+c->k[7]); n1 ^= f(c,n2+c->k[6]);
+    n2 ^= f(c,n1+c->k[5]); n1 ^= f(c,n2+c->k[4]);
+    n2 ^= f(c,n1+c->k[3]); n1 ^= f(c,n2+c->k[2]);
+    n2 ^= f(c,n1+c->k[1]); n1 ^= f(c,n2+c->k[0]);
+
+    n2 ^= f(c,n1+c->k[7]); n1 ^= f(c,n2+c->k[6]);
+    n2 ^= f(c,n1+c->k[5]); n1 ^= f(c,n2+c->k[4]);
+    n2 ^= f(c,n1+c->k[3]); n1 ^= f(c,n2+c->k[2]);
+    n2 ^= f(c,n1+c->k[1]); n1 ^= f(c,n2+c->k[0]);
+
+    n2 ^= f(c,n1+c->k[7]); n1 ^= f(c,n2+c->k[6]);
+    n2 ^= f(c,n1+c->k[5]); n1 ^= f(c,n2+c->k[4]);
+    n2 ^= f(c,n1+c->k[3]); n1 ^= f(c,n2+c->k[2]);
+    n2 ^= f(c,n1+c->k[1]); n1 ^= f(c,n2+c->k[0]);
+    out[0] = (byte)(n2&0xff);  out[1] = (byte)((n2>>8)&0xff);
+    out[2] = (byte)((n2>>16)&0xff); out[3]=(byte)(n2>>24);
+    out[4] = (byte)(n1&0xff);  out[5] = (byte)((n1>>8)&0xff);
+    out[6] = (byte)((n1>>16)&0xff); out[7] = (byte)(n1>>24);
+}
+
 /* Encrypts several blocks in ECB mode */
 void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks)
 {
@@ -196,6 +239,18 @@ void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks)
     for(i=0;i<blocks;i++)
     {
         gostcrypt(c,clear,cipher);
+        clear+=8;
+        cipher+=8;
+    }
+}
+
+/* Decrypts several blocks in ECB mode */
+void gost_dec(gost_ctx *c, const byte *cipher,byte *clear, int blocks)
+{
+    int i;
+    for(i=0;i<blocks;i++)
+    {
+        gostdecrypt(c,cipher,clear);
         clear+=8;
         cipher+=8;
     }
