@@ -50,11 +50,5 @@
 #include "gost.h"
 #include "cipher.h"
 
-typedef struct {
-    u4 k[8];
-    /* Constant s-boxes -- set up in gost_init(). */
-    u4 k87[256],k65[256],k43[256],k21[256];
-} srtp_gost_icm_ctx_t;
-
 //static void srtp_gost_icm_advance(srtp_gost_icm_ctx_t *c);
 #endif /* GOST_ICM_H */

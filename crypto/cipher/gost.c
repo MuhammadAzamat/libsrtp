@@ -151,10 +151,10 @@ static void kboxinit(gost_ctx *c, const gost_subst_block *b)
 
     for (i = 0; i < 256; i++)
     {
-        c->k87[i] = (b->k1[i>>4] <<4 | b->k2 [i &15])<<24;
-        c->k65[i] = (b->k3[i>>4] << 4 | b->k4 [i &15])<<16;
-        c->k43[i] = (b->k5[i>>4] <<4  | b->k6 [i &15])<<8;
-        c->k21[i] = b->k7[i>>4] <<4  | b->k8 [i &15];
+        c->k87[i] = (b->k8[i>>4] <<4 | b->k7 [i &15])<<24;
+        c->k65[i] = (b->k6[i>>4] << 4 | b->k5 [i &15])<<16;
+        c->k43[i] = (b->k4[i>>4] <<4  | b->k3 [i &15])<<8;
+        c->k21[i] = b->k2[i>>4] <<4  | b->k1 [i &15];
     }
 }
 
@@ -277,4 +277,23 @@ void gost_init(gost_ctx *c, const gost_subst_block *b)
 void gost_destroy(gost_ctx *c)
 {
     int i; for(i=0;i<8;i++) c->k[i]=0;
+}
+
+/* Encrypts several full blocks in CFB mode using 8byte IV */
+void gost_enc_cfb(gost_ctx *ctx,const byte *iv,const byte *clear,byte *cipher, int blocks)
+{
+    byte cur_iv[8];
+    byte gamma[8];
+    int i,j;
+    const byte *in;
+    byte *out;
+    memcpy(cur_iv,iv,8);
+    for(i=0,in=clear,out=cipher;i<blocks;i++,in+=8,out+=8)
+    {
+        gostcrypt(ctx,cur_iv,gamma);
+        for (j=0;j<8;j++)
+        {
+            cur_iv[j]=out[j]=in[j]^gamma[j];
+        }
+    }
 }

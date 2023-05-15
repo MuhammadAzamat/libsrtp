@@ -30,12 +30,20 @@ typedef struct {
     u4 k[8];
     /* Constant s-boxes -- set up in gost_init(). */
     u4 k87[256],k65[256],k43[256],k21[256];
+    v128_t counter;                       /* holds the counter value          */
+    v128_t offset;                        /* initial offset value             */
+    v128_t keystream_buffer;              /* buffers bytes of keystream       */
+    int bytes_in_buffer;                  /* number of unused bytes in buffer */
+    int key_size;                         /* GOST key size */
 } gost_ctx;
 
 /* Encrypts several blocks in ECB mode */
 void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks);
 /* Decrypts several blocks in ECB mode */
 void gost_dec(gost_ctx *c, const byte *cipher,byte *clear, int blocks);
+
+/* Encrypts several full blocks in CFB mode using 8byte IV */
+void gost_enc_cfb(gost_ctx *ctx,const byte *iv,const byte *clear,byte *cipher, int blocks);
 
 void gost_key(gost_ctx *c, const byte *k);
 /* Initalize context. Provides default value for subst_block */

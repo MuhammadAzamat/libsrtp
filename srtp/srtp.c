@@ -737,6 +737,9 @@ static srtp_err_status_t srtp_kdf_init(srtp_kdf_t *kdf,
     case SRTP_AES_ICM_128_KEY_LEN_WSALT:
         cipher_id = SRTP_AES_ICM_128;
         break;
+    case SRTP_GOST_256_KEY_LEN:
+        cipher_id = SRTP_GOST_28147_89;
+        break;
     default:
         return srtp_err_status_bad_param;
         break;
@@ -834,6 +837,8 @@ static inline int full_key_length(const srtp_cipher_type_t *cipher)
         return SRTP_AES_GCM_128_KEY_LEN_WSALT;
     case SRTP_AES_GCM_256:
         return SRTP_AES_GCM_256_KEY_LEN_WSALT;
+    case SRTP_GOST_28147_89:
+        return SRTP_GOST_256_KEY_LEN;
     default:
         return 0;
     }
@@ -1003,6 +1008,10 @@ srtp_err_status_t srtp_stream_init_keys(srtp_stream_ctx_t *srtp,
 
     if (input_keylen > kdf_keylen) {
         kdf_keylen = 46; /* AES-CTR mode is always used for KDF */
+    }
+
+    if (input_keylen == SRTP_GOST_256_KEY_LEN) {
+        kdf_keylen = 32; /* AES-CTR mode is always used for KDF */
     }
 
     debug_print(mod_srtp, "input key len: %d", input_keylen);
