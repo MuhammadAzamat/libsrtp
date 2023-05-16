@@ -38,7 +38,7 @@ typedef struct {
 } gost_ctx;
 
 /* Encrypts several blocks in ECB mode */
-void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks);
+void gost_enc(gost_ctx *c,byte *clear);
 /* Decrypts several blocks in ECB mode */
 void gost_dec(gost_ctx *c, const byte *cipher,byte *clear, int blocks);
 

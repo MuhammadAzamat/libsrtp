@@ -167,7 +167,7 @@ static word32 f(gost_ctx *c,word32 x)
     return x<<11 | x>>(32-11);
 }
 /* Low-level encryption routine - encrypts one 64 bit block*/
-void gostcrypt(gost_ctx *c, const byte *in, byte *out)
+void gostcrypt(gost_ctx *c, byte *in)
 {
     register word32 n1, n2; /* As named in the GOST */
     n1 = in[0]|(in[1]<<8)|(in[2]<<16)|(in[3]<<24);
@@ -194,10 +194,10 @@ void gostcrypt(gost_ctx *c, const byte *in, byte *out)
     n2 ^= f(c,n1+c->k[3]); n1 ^= f(c,n2+c->k[2]);
     n2 ^= f(c,n1+c->k[1]); n1 ^= f(c,n2+c->k[0]);
 
-    out[0] = (byte)(n2&0xff);  out[1] = (byte)((n2>>8)&0xff);
-    out[2] = (byte)((n2>>16)&0xff); out[3]=(byte)(n2>>24);
-    out[4] = (byte)(n1&0xff);  out[5] = (byte)((n1>>8)&0xff);
-    out[6] = (byte)((n1>>16)&0xff); out[7] = (byte)(n1>>24);
+    in[0] = (byte)(n2&0xff);  in[1] = (byte)((n2>>8)&0xff);
+    in[2] = (byte)((n2>>16)&0xff); in[3]=(byte)(n2>>24);
+    in[4] = (byte)(n1&0xff);  in[5] = (byte)((n1>>8)&0xff);
+    in[6] = (byte)((n1>>16)&0xff); in[7] = (byte)(n1>>24);
 }
 
 /* Low-level decryption routine. Decrypts one 64-bit block */
@@ -233,15 +233,11 @@ void gostdecrypt(gost_ctx *c, const byte *in,byte *out)
 }
 
 /* Encrypts several blocks in ECB mode */
-void gost_enc(gost_ctx *c,const byte *clear,byte *cipher, int blocks)
+void gost_enc(gost_ctx *c, byte *clear)
 {
-    int i;
-    for(i=0;i<blocks;i++)
-    {
-        gostcrypt(c,clear,cipher);
-        clear+=8;
-        cipher+=8;
-    }
+
+    gostcrypt(c,clear);
+    clear+=8;
 }
 
 /* Decrypts several blocks in ECB mode */
@@ -283,17 +279,16 @@ void gost_destroy(gost_ctx *c)
 void gost_enc_cfb(gost_ctx *ctx,const byte *iv,const byte *clear,byte *cipher, int blocks)
 {
     byte cur_iv[8];
-    byte gamma[8];
     int i,j;
     const byte *in;
     byte *out;
     memcpy(cur_iv,iv,8);
     for(i=0,in=clear,out=cipher;i<blocks;i++,in+=8,out+=8)
     {
-        gostcrypt(ctx,cur_iv,gamma);
+        gostcrypt(ctx,cur_iv);
         for (j=0;j<8;j++)
         {
-            cur_iv[j]=out[j]=in[j]^gamma[j];
+            cur_iv[j]=out[j]=in[j]^cur_iv[j];
         }
     }
 }

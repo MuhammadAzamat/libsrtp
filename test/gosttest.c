@@ -72,8 +72,8 @@ int main(void)
     //{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     // 0x00, 0x00, 0x00, 0x00, 0x00};
 
-    //    const byte plaintext[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    //    0x00 };
+        byte text[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00 };
 
     //    const byte plaintext[] = { 0x0e, 0xe1, 0xa4, 0x62, 0x22, 0x96, 0x9c,
     //    0x23 };
@@ -85,9 +85,10 @@ int main(void)
 
     //    const uint8_t output[] = { 0x1b, 0x0b, 0xbc, 0x32, 0xce, 0xbc, 0xab,
     //    0x42 };
-    byte plaintext[] = "Hello,world!!!!";
-
+//    byte text[] = "Hello,world!!!!";
+    byte *plaintext = text;
     byte ciphertext[sizeof(plaintext)];
+    (void)ciphertext;
     byte deciphertext[sizeof(plaintext)];
     size_t len = sizeof(plaintext);
 
@@ -95,35 +96,31 @@ int main(void)
     gost_init(&c, &GostR3411_94_TestParamSet);
     gost_key(&c, key);
 
-    gost_enc(&c, plaintext, ciphertext, 2);
-
-    printf("Encrypting\n");
     printf("Plaintext: %s\n", plaintext);
     printf("Plaintext : ");
     for (size_t i = 0; i < len; i++) {
         printf("%02x", plaintext[i]);
     }
     printf("\n");
+    for (byte i = 0; i < 2; i++) {
+        gost_enc(&c, plaintext);
+        plaintext += 8;
+    }
 
-    printf("Ciphertext: %s\n", ciphertext);
+    printf("Encrypting\n");
+
+    printf("Ciphertext: %s\n", text);
 
     printf("Ciphertext: ");
     for (size_t i = 0; i < len; i++) {
-        printf("%02x", ciphertext[i]);
+        printf("%02x", plaintext[i]);
     }
 
     printf("\n");
     printf("Decrypting\n");
 
-    gost_dec(&c, ciphertext, deciphertext, 2);
+    gost_dec(&c, plaintext, deciphertext, 2);
 
-    printf("Ciphertext: ");
-    for (size_t i = 0; i < len; i++) {
-        printf("%02x", ciphertext[i]);
-    }
-    printf("\n");
-    printf("Ciphertext: %s", ciphertext);
-    printf("\n");
 
     printf("Plaintext: ");
     for (size_t i = 0; i < len; i++) {
