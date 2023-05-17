@@ -194,10 +194,10 @@ void gostcrypt(gost_ctx *c, byte *in)
     n2 ^= f(c,n1+c->k[3]); n1 ^= f(c,n2+c->k[2]);
     n2 ^= f(c,n1+c->k[1]); n1 ^= f(c,n2+c->k[0]);
 
-    in[0] = (byte)(n2&0xff);  in[1] = (byte)((n2>>8)&0xff);
-    in[2] = (byte)((n2>>16)&0xff); in[3]=(byte)(n2>>24);
-    in[4] = (byte)(n1&0xff);  in[5] = (byte)((n1>>8)&0xff);
-    in[6] = (byte)((n1>>16)&0xff); in[7] = (byte)(n1>>24);
+    in[0] = (byte)(n2&0xff);        in[1] = (byte)((n2>>8)&0xff);
+    in[2] = (byte)((n2>>16)&0xff);  in[3]=(byte)(n2>>24);
+    in[4] = (byte)(n1&0xff);        in[5] = (byte)((n1>>8)&0xff);
+    in[6] = (byte)((n1>>16)&0xff);  in[7] = (byte)(n1>>24);
 }
 
 /* Low-level decryption routine. Decrypts one 64-bit block */
@@ -226,18 +226,16 @@ void gostdecrypt(gost_ctx *c, const byte *in,byte *out)
     n2 ^= f(c,n1+c->k[5]); n1 ^= f(c,n2+c->k[4]);
     n2 ^= f(c,n1+c->k[3]); n1 ^= f(c,n2+c->k[2]);
     n2 ^= f(c,n1+c->k[1]); n1 ^= f(c,n2+c->k[0]);
-    out[0] = (byte)(n2&0xff);  out[1] = (byte)((n2>>8)&0xff);
+    out[0] = (byte)(n2&0xff);       out[1] = (byte)((n2>>8)&0xff);
     out[2] = (byte)((n2>>16)&0xff); out[3]=(byte)(n2>>24);
-    out[4] = (byte)(n1&0xff);  out[5] = (byte)((n1>>8)&0xff);
+    out[4] = (byte)(n1&0xff);       out[5] = (byte)((n1>>8)&0xff);
     out[6] = (byte)((n1>>16)&0xff); out[7] = (byte)(n1>>24);
 }
 
 /* Encrypts several blocks in ECB mode */
 void gost_enc(gost_ctx *c, byte *clear)
 {
-
     gostcrypt(c,clear);
-    clear+=8;
 }
 
 /* Decrypts several blocks in ECB mode */
