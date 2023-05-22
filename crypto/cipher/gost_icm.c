@@ -146,11 +146,11 @@ static void srtp_gost_icm_advance(gost_ctx *c)
     v128_copy(&c->keystream_buffer, &c->counter);
     gost_enc(c, (byte *)&c->keystream_buffer);
 
-    c->bytes_in_buffer = sizeof(v128_t);
+    c->bytes_in_buffer = sizeof(v128_t)/2;
 
     /* clock counter forward */
-    if (!++(c->counter.v8[15])) {
-        ++(c->counter.v8[14]);
+    if (!++(c->counter.v8[7])) {
+        ++(c->counter.v8[6]);
     }
 }
 
@@ -204,7 +204,7 @@ static srtp_err_status_t srtp_gost_icm_encrypt(void *cv,
 
     } else {
         /* encrypt bytes until the remaining data is 16-byte aligned */
-        for (i = (sizeof(v128_t) - c->bytes_in_buffer); i < sizeof(v128_t);
+        for (i = (sizeof(v128_t)/2 - c->bytes_in_buffer); i < sizeof(v128_t)/2;
              i++) {
             *buf++ ^= c->keystream_buffer.v8[i];
         }
@@ -214,7 +214,7 @@ static srtp_err_status_t srtp_gost_icm_encrypt(void *cv,
     }
 
     /* now loop over entire 16-byte blocks of keystream */
-    for (i = 0; i < (bytes_to_encr / sizeof(v128_t)); i++) {
+    for (i = 0; i < (bytes_to_encr / (sizeof(v128_t)/2)); i++) {
         /* fill buffer with new keystream */
         srtp_gost_icm_advance(c);
 
@@ -240,20 +240,20 @@ static srtp_err_status_t srtp_gost_icm_encrypt(void *cv,
             *buf++ ^= c->keystream_buffer.v8[5];
             *buf++ ^= c->keystream_buffer.v8[6];
             *buf++ ^= c->keystream_buffer.v8[7];
-            *buf++ ^= c->keystream_buffer.v8[8];
-            *buf++ ^= c->keystream_buffer.v8[9];
-            *buf++ ^= c->keystream_buffer.v8[10];
-            *buf++ ^= c->keystream_buffer.v8[11];
-            *buf++ ^= c->keystream_buffer.v8[12];
-            *buf++ ^= c->keystream_buffer.v8[13];
-            *buf++ ^= c->keystream_buffer.v8[14];
-            *buf++ ^= c->keystream_buffer.v8[15];
+//            *buf++ ^= c->keystream_buffer.v8[8];
+//            *buf++ ^= c->keystream_buffer.v8[9];
+//            *buf++ ^= c->keystream_buffer.v8[10];
+//            *buf++ ^= c->keystream_buffer.v8[11];
+//            *buf++ ^= c->keystream_buffer.v8[12];
+//            *buf++ ^= c->keystream_buffer.v8[13];
+//            *buf++ ^= c->keystream_buffer.v8[14];
+//            *buf++ ^= c->keystream_buffer.v8[15];
         } else {
             b = (uint32_t *)buf;
             *b++ ^= c->keystream_buffer.v32[0];
             *b++ ^= c->keystream_buffer.v32[1];
-            *b++ ^= c->keystream_buffer.v32[2];
-            *b++ ^= c->keystream_buffer.v32[3];
+//            *b++ ^= c->keystream_buffer.v32[2];
+//            *b++ ^= c->keystream_buffer.v32[3];
             buf = (uint8_t *)b;
         }
 #endif /* #if ALIGN_32 */
@@ -269,7 +269,7 @@ static srtp_err_status_t srtp_gost_icm_encrypt(void *cv,
         }
 
         /* reset the keystream buffer size to right value */
-        c->bytes_in_buffer = sizeof(v128_t) - i;
+        c->bytes_in_buffer = sizeof(v128_t)/2 - i;
     } else {
         /* no tail, so just reset the keystream buffer size to zero */
         c->bytes_in_buffer = 0;
